@@ -6,10 +6,6 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["ControllerBot/ControllerBot.csproj", "ControllerBot/"]
-RUN ls -R
-RUN mkdir -p Migrations/Scripts
-COPY ["ControllerBot/Migrations/Scripts/", "Migrations/Scripts/"]
-RUN ls -R
 RUN dotnet restore "ControllerBot/ControllerBot.csproj"
 COPY . .
 WORKDIR "/src/ControllerBot"
@@ -18,13 +14,9 @@ RUN dotnet build "ControllerBot.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "ControllerBot.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-RUN ls -R
-
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 COPY --from=build src/ControllerBot/Migrations/Scripts ./Migrations/Scripts
 ENTRYPOINT ["dotnet", "ControllerBot.dll"]
-
-RUN ls -R
 
