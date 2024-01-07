@@ -1,9 +1,8 @@
-﻿using System.Reflection;
-using DbUp;
+﻿using DbUp;
 
 namespace ControllerBot.Migrations;
 
-public class Migrator
+public static class Migrator
 {
     public static void Migrate(WebApplication app)
     {
